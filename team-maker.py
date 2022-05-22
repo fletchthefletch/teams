@@ -1,10 +1,14 @@
 from numpy import array
 import pandas as pd
 import sys 
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 MIN_NUM_OF_PLAYERS = 8
 MIN_PLAYERS_PER_TEAM = 4
 MAX_PLAYERS_PER_TEAM = 5
+
+LOCAL_FILE_NAME = 'test_data_file.xlsx'
 
 teams = []
 subs = []
@@ -142,17 +146,22 @@ def createTeams(numOfTeams, numOfPlayers, playerSheet):
         
     return teams  
 
-# Read data
+
+#### MAIN PROGRAM ####
+
 try:
-    player_sheet = pd.read_excel(sys.argv[0])
+    # Read spreadsheet arg
+    player_sheet = pd.read_excel(sys.argv[1])
     print("Reading data...")
 except: 
     try:
-        player_sheet = pd.read_excel('test.xlsx')
+        # Read local file arg
+        player_sheet = pd.read_excel(open(LOCAL_FILE_NAME,'rb'), sheet_name=0)
         print("Reading data...")
     except:
         print("No data sheet provided!")
         quit()
+        
 # Remove players who aren't playing tonight
 refined_player_sheet = refinePlayers(player_sheet) 
 # Sort players by skill level
