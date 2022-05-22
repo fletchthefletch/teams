@@ -10,21 +10,21 @@ MAX_PLAYERS_PER_TEAM = 5
 
 LOCAL_FILE_NAME = 'test_data_file.xlsx'
 
-teams = []
-subs = []
-
 def printHeading():
     print("________________________________________________________")
     print("THE DON'S TEAM CRAFTER")
     print("________________________________________________________\n")
 
-def printTeams(teams):
+def printTeams(teams, showRatings=False):
     print("TONIGHT'S TEAMS")
     i = 0
     while i < num_of_teams:
         print("________________________________________________________")
         print('[Team ' + str(i+1) + ' | Rating: ' + str(teams[i][0]['rating'].sum()) + ']')
-        print(teams[i][0]) 
+        if showRatings:
+            print(teams[i][0]) 
+        else:
+            print(teams[i][0]['name']) 
         i += 1
 
 def printSubs(subs):
@@ -34,6 +34,22 @@ def printSubs(subs):
         print('\nOn the bench tonight is...')
         for sub in subs:
             print(sub[0] + ' : ' + str(sub[1]))
+
+def readInPlayerValues():
+    try:
+        # Read spreadsheet arg
+        player_sheet = pd.read_excel(sys.argv[1])
+        print("Reading data...")
+    except: 
+        try:
+            # Read local file arg
+            player_sheet = pd.read_excel(open(LOCAL_FILE_NAME,'rb'), sheet_name=0)
+            print("Reading data...")
+            
+        except:
+            print("No data sheet provided!")
+            quit()
+    return player_sheet
 
 def refinePlayers(playerSheet):
     newPlayerSheet = pd.DataFrame()
@@ -118,7 +134,8 @@ def getPlayersProspectiveTeam(allTeams, numOfTeams):
 
     return targetTeam 
 
-def createTeams(numOfTeams, numOfPlayers, playerSheet):
+def createTeams(numOfTeams, numOfPlayers, playerSheet, subs):
+    teams = []
     i = 0
     while i < numOfTeams:
         newTeam = pd.DataFrame(columns=['name', 'rating'])
@@ -148,20 +165,7 @@ def createTeams(numOfTeams, numOfPlayers, playerSheet):
 
 
 #### MAIN PROGRAM ####
-
-try:
-    # Read spreadsheet arg
-    player_sheet = pd.read_excel(sys.argv[1])
-    print("Reading data...")
-except: 
-    try:
-        # Read local file arg
-        player_sheet = pd.read_excel(open(LOCAL_FILE_NAME,'rb'), sheet_name=0)
-        print("Reading data...")
-    except:
-        print("No data sheet provided!")
-        quit()
-        
+player_sheet = readInPlayerValues()  
 # Remove players who aren't playing tonight
 refined_player_sheet = refinePlayers(player_sheet) 
 # Sort players by skill level
@@ -171,14 +175,15 @@ num_of_players = len(refined_player_sheet)
 num_of_teams = getNumOfTeams(num_of_players)
 
 # Create team storage
-teams = createTeams(num_of_teams, num_of_players, refined_player_sheet)
+subs = []
+teams = createTeams(num_of_teams, num_of_players, refined_player_sheet, subs)
 
-# Display details for the Don...
 printHeading()
 #print(player_sheet) # See all players in the Donadoni club
 #print("________________________________________________________")
 #print(refined_player_sheet) # See all players who want to play tonight
 print('There are ' + str(num_of_players) + ' players keen on playing tonight.')
 print("________________________________________________________")
-printTeams(teams) # See all teams
+#printTeams(teams)
+printTeams(teams, True) # Print teams with player ratings
 printSubs(subs)
