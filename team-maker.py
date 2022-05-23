@@ -168,6 +168,8 @@ def createTeams(numOfTeams, numOfPlayers, playerSheet, subs):
 player_sheet = readInPlayerValues()  
 # Remove players who aren't playing tonight
 refined_player_sheet = refinePlayers(player_sheet) 
+# Randomize player order
+refined_player_sheet = refined_player_sheet.sample(frac=1).reset_index(drop=True)
 # Sort players by skill level
 refined_player_sheet = refined_player_sheet.sort_values(by='Ability Score (1-10)', ascending=False)
 
