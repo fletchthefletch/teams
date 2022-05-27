@@ -65,38 +65,40 @@ def refinePlayers(playerSheet):
     return newPlayerSheet
 
 def getNumOfTeams(numOfPlayers):
+    # I thought long and hard about the best way to implement this method, 
+    # but decided ultimately that the number of teams the Don may want for a 
+    # given number of players could change - given venue or ability. 
+    # The below statements look awful programmatically, but it's the most flexible approach.
     if (numOfPlayers < MIN_NUM_OF_PLAYERS):
         # Not enough players to field a team
         return -1
-    if numOfPlayers == 8:
+    elif numOfPlayers == 8:
         return 2
-    if numOfPlayers == 9:
+    elif numOfPlayers == 9:
         return 2
-    if numOfPlayers == 10:
+    elif numOfPlayers == 10:
         return 2
-    if numOfPlayers == 11:
+    elif numOfPlayers == 11:
         return 2
-    if numOfPlayers == 12:
+    elif numOfPlayers == 12:
         return 3
-    if numOfPlayers == 13:
+    elif numOfPlayers == 13:
         return 3
-    if numOfPlayers == 14:
+    elif numOfPlayers == 14:
         return 3
-    if numOfPlayers == 15:
+    elif numOfPlayers == 15:
         return 3
-    if numOfPlayers == 16:
+    elif numOfPlayers == 16:
         return 4
-    if numOfPlayers == 17:
+    elif numOfPlayers == 17:
         return 4
-    if numOfPlayers == 18:
+    elif numOfPlayers == 18:
         return 4
-    if numOfPlayers == 19:
+    elif numOfPlayers == 19:
         return 4
-    if numOfPlayers == 20:
+    elif numOfPlayers == 20:
         return 4
     
-    #return numOfPlayers / MIN_PLAYERS_PER_TEAM if (numOfPlayers % MIN_PLAYERS_PER_TEAM < numOfPlayers % MAX_PLAYERS_PER_TEAM) else numOfPlayers / MAX_PLAYERS_PER_TEAM
-
 def getPlayersProspectiveTeam(allTeams, numOfTeams):
     # 1. Get team with the fewest players
     if numOfTeams < 1:
